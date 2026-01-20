@@ -2,7 +2,8 @@
 
 #
 
-Create a Dataset on a pool called Orico_Utils and copy the contents of the CF1000 folder in github into that Dataset.
+Create a Dataset on a pool called Orico_Utils and download the contents of the CF1000 folder in github into that Dataset. 
+(You can use the command `wget -qO- https://github.com/tomuk5/Orico_Cyberdata_Docs/archive/refs/heads/main.tar.gz | tar -xzv --strip-components=2 "Orico_Cyberdata_Docs-main/CF1000"` if you are in a terminal and already inside the destination folder.)
 
 Edit the systemd/led-daemon.service file to replace `YOUR_POOL_NAME` with your actual pool name.
 

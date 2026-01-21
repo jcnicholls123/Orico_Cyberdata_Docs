@@ -1,9 +1,30 @@
 **Instructions for Truenas SCALE usage**
-
+**Please note these LED mappings may be different on your CF56-Pro**
 #
 
 Create a Dataset on a pool called Orico_Utils and download the contents of the CF56-Pro folder in github into that Dataset. 
 (You can use the command `wget -qO- https://github.com/tomuk5/Orico_Cyberdata_Docs/archive/refs/heads/main.tar.gz | tar -xzv --strip-components=2 "Orico_Cyberdata_Docs-main/CF56-Pro"` if you are in a terminal and already inside the destination folder.)
+
+TrueNAS SCALE does not create /dev/disk/by-bay automatically.
+The LED daemon depends on these mappings to associate disks with physical bays.
+
+Copy the udev rule file into the system udev rules directory:
+
+cp /mnt/YOUR_POOL_NAME/Orico_Utils/udev/99-orico-bays.rules /etc/udev/rules.d/
+
+
+Reload the udev rules and apply them to existing disks:
+
+udevadm control --reload-rules
+udevadm trigger --subsystem-match=block
+
+
+You can verify the mappings were created with:
+
+ls -l /dev/disk/by-bay
+
+
+You should see bay1 through bay5 mapped to disks.
 
 Edit the systemd/led-daemon.service file to replace `YOUR_POOL_NAME` with your actual pool name.
 
@@ -18,4 +39,4 @@ Enter the below into the command box (and replace `YOUR_POOL_NAME` with your act
 
 This ensures that the service persists beyond a reboot and OS updates.
 
-You can then reboot your Truenas Instance for this to take effect or execute the command from the shell using Sudo for it to take effect without a restart.
+You can then reboot your Truenas Instance for this to take effect or execute the command "systemctl start led-daemon.service" from the shell using Sudo for it to take effect without a restart.
